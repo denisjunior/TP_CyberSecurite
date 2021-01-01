@@ -1,0 +1,91 @@
+{% extends 'dashboard.html' %}
+{% block content %}
+    <div class="row">
+        <div class="col-6">
+            <!-- general form elements -->
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">Formulaire d'enrégistrement d'un parent</h3>
+                </div>
+                <!-- /.card-header -->
+                <!-- form start -->
+                <form role="form" action="{% url 'create_parent' %}" method="post" autocomplete="off">
+                    {% csrf_token %}
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="nomParent">Nom Parent</label>
+                            <input type="text" class="form-control" name="nomParent" id="nomParent" placeholder="SILVA">
+                        </div>
+                        <div class="form-group">
+                            <label for="prenomParent">Prénoms Parent</label>
+                            <input type="text" class="form-control" name="prenomParent" id="prenomParent" placeholder="Tatiana">
+                        </div>
+                        <div class="form-group">
+                            <label for="contactP">Contact</label>
+                            <input type="number" class="form-control" name="contactP" id="contactP" placeholder="0625689500">
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">Enrégistrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- data table -->
+        <div class="col-6">
+
+
+            <div class="card" style="height: calc(100vh - 175px)">
+                <div class="card-header">
+                    <h3 class="card-title">Liste des parents</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <table id="example2" class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>Nom parent</th>
+                            <th>Prénoms parent</th>
+                            <th>Contact parent</th>
+                            <th>Option</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for parent in parents %}
+                            <tr>
+                                <td>{{ parent.nomParent }}</td>
+                                <td>{{ parent.prenomParent }}</td>
+                                <td> {{ parent.contactP }}</td>
+                                <td>
+                                    <a href="{% url 'updateParent' parent.id %}" title="Modifier" >
+                                        <button class="btn btn-primary" type="submit"><i class="fa fa-pen"></i></button>
+                                    </a>
+                                    <a href="{% url 'deleteParent' parent.id %}" onclick="return confirm('confirmez la suppression?')"><button class="btn btn-danger" type="submit" ><i class="fa fa-trash"></i></button></a>
+                                </td>
+                            </tr>
+
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+    </div>
+    <!-- /.card -->
+{% endblock %}
+{% block script %}
+<script>
+    $ (function(){
+        {% if messages %}
+            {% for message in messages %}
+                displayToast("{{ message }}", "{{ message.tags }}");
+            {% endfor %}
+        {% endif %}
+    })
+</script>
+{% endblock %}

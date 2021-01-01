@@ -1,0 +1,107 @@
+{% extends 'dashboard.html' %}
+{% block content %}
+    <div class="row">
+        <div class="col-6">
+            <!-- general form elements -->
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">Formulaire d'enrégistrement d'un rendez-vous</h3>
+                </div>
+                <!-- /.card-header -->
+                <!-- form start -->
+                <form role="form" action="{% url 'create_rdv' %}" method="post" autocomplete="off">
+                    {% csrf_token %}
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="dateRdv">Date rendez-vous</label>
+                            <input type="date" class="form-control" id="dateRdv" name="dateRdv">
+                        </div>
+                        <div class="form-group">
+                            <label for="heureDebut">Heure début rendez-vous</label>
+                            <input type="time" class="form-control" id="heureDebut" name="heureDebut" placeholder="12:00">
+                        </div>
+                        <div class="form-group">
+                            <label for="heureFin">Heure fin rendez-vous</label>
+                            <input type="time" class="form-control" id="heureFin" name="heureFin"  placeholder="12:00">
+                        </div>
+                        <div class="form-group">
+                            <label for="medecin_rdv"><span class="text-danger">*</span>Medecin</label>
+                            <select name="medecin_rdv" id="medecin_rdv" class="form-control form-control-sm" required>
+                                {% for medecin in medecins %}
+                                    <option value="{{ medecin.id }}">{{ medecin }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="animal_rdv "><span class="text-danger">*</span>Animal</label>
+                            <select name="animal_rdv" id="animal_rdv" class="form-control form-control-sm">
+                                {% for animal in animals %}
+                                    <option value="{{ animal.id }}">{{ animal }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">Enrégistrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- data table -->
+        <div class="col-6">
+
+
+            <div class="card" style="height: calc(100vh - 175px)">
+                <div class="card-header">
+                    <h3 class="card-title">Liste des rendez-vous</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <table id="example2" class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Heure</th>
+                            <th>Medecin</th>
+                            <th>Animal</th>
+                            <th>Option</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for rdv in rendezvous %}
+                            <tr>
+                                <td>{{ rdv.dateRdv }}</td>
+                                <td>{{ rdv.heureDebut }}-{{ rdv.heureFin }}</td>
+                                <td>{{ rdv.medecin_rdv.nomMedecin }}</td>
+                                <td>{{ rdv.animal_rdv.nomAnimal }}</td>
+                                <td>
+                                    <a href="{% url 'updateRdv' rdv.id %}" title="Modifier" >
+                                        <button class="btn btn-primary" type="submit"><i class="fa fa-pen"></i></button>
+                                    </a>
+                                    <a href="{% url 'deleteRdv' rdv.id %}" title="supprimer" onclick="return confirm('confirmez la suppression?')"><button class="btn btn-danger" type="submit" ><i class="fa fa-trash"></i></button></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+    </div>
+    <!-- /.card -->
+{% endblock %}
+{% block script %}
+    <script>
+        $ (function(){
+            {% if messages %}
+                {% for message in messages %}
+                    displayToast("{{ message }}", "{{ message.tags }}");
+                {% endfor %}
+            {% endif %}
+        })
+    </script>
+{% endblock %}

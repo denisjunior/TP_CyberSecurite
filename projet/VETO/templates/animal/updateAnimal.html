@@ -1,0 +1,105 @@
+{% extends 'dashboard.html' %}
+{% block content %}
+    <div class="row">
+        <div class="col-6">
+            <!-- general form elements -->
+            <div class="card card-warning">
+                <div class="card-header">
+                    <h3 class="card-title">Formulaire de modification d'un animal</h3>
+                </div>
+                <!-- /.card-header -->
+                <!-- form start -->
+                <form role="form" action="{% url 'updateAnimal' animal.id %}" method="post" autocomplete="off">
+                    {% csrf_token %}
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="nomAnimal">Nom animal</label>
+                            <input type="text" class="form-control" id="nomAnimal" value="{{ animal.nomAnimal }}" name="nomAnimal" placeholder="Chien">
+                        </div>
+                        <div class="form-group">
+                            <label for="sexAnimal"><span class="text-danger">*</span>Sexe</label>
+                            <select name="sexAnimal" id="sexAnimal"  class="form-control form-control-sm" required>
+                                <option value=""></option>
+                                <option value="M">M</option>
+                                <option value="F">F</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="parent_animal"><span class="text-danger">*</span>Parent</label>
+                            <select name="parent_animal" id="parent_animal" class="form-control form-control-sm" required>
+                                {% for parent in parents %}
+                                    <option value="{{ parent.id }}"{% if parent.id == animal.parent_animal.id%}selected{% endif %}>{{ parent }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="type_animal"><span class="text-danger">*</span>Type animal</label>
+                            <select name="type_animal" id="type_animal" class="form-control form-control-sm" required>
+                                {% for type in types %}
+                                    <option value="{{ type.id }}"{% if animal.type_animal.id == type.id %}selected{% endif %}>{{ type }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">Enrégistrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- data table -->
+        <div class="col-6">
+
+
+            <div class="card" style="height: calc(100vh - 175px)">
+                <div class="card-header">
+                    <h3 class="card-title">Liste des animaux</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <table id="example2" class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>Nom animal</th>
+                            <th>Parent</th>
+                            <th>Type</th>
+                            <th>Option</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for animal in animals %}
+                            <tr>
+                                <td>{{ animal.nomAnimal }}</td>
+                                <td>{{ animal.parent_animal.nomParent }}</td>
+                                <td>{{ animal.type_animal.libelleType }}</td>
+                                <td>
+                                    <a href="#" title="Modifier" >
+                                        <button class="btn btn-primary" type="submit"><i class="fa fa-pen"></i></button>
+                                    </a>
+                                    <a href="#" title="supprimer" onclick="return confirm('confirmez la suppression?')"><button class="btn btn-danger" type="submit" ><i class="fa fa-trash"></i></button></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+    </div>
+    <!-- /.card -->
+{% endblock %}
+{% block script %}
+    <script>
+        $ (function(){
+            {% if messages %}
+                {% for message in messages %}
+                    displayToast("{{ message }}", "{{ message.tags }}");
+                {% endfor %}
+            {% endif %}
+        })
+    </script>
+{% endblock %}

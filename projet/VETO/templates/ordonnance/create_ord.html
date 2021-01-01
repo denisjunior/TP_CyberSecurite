@@ -1,0 +1,70 @@
+{% extends 'dashboard.html' %}
+{% block content %}
+    <div class="row">
+        <div class="col-6">
+            <!-- general form elements -->
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">Formulaire d'enrégistrement d'une ordonnance</h3>
+                </div>
+                <!-- /.card-header -->
+                <!-- form start -->
+                <form role="form" action="{% url 'create_ordonnance' %}" method="post" autocomplete="off">
+                    {% csrf_token %}
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="rdv_ord"><span class="text-danger">*</span>Rendez-vous</label>
+                            <select name="rdv_ord" id="rdv_ord" class="form-control form-control-sm" required>
+                                {% for rdv in rendezvous %}
+                                    <option value="{{ rdv.id }}">{{ rdv}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">Enrégistrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- data table -->
+        <div class="col-6">
+
+
+            <div class="card" style="height: calc(100vh - 175px)">
+                <div class="card-header">
+                    <h3 class="card-title">Liste des ordonnances</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <table id="example2" class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>Patient</th>
+                            <th>Médecin</th>
+                            <th>Option</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for ord in ordonnance %}
+                            <tr>
+                                <td>{{ ord.rdv_ord.animal_rdv.nomAnimal }}</td>
+                                <td>{{ ord.rdv_ord.medecin_rdv.nomMedecin }}</td>
+                                <td>
+                                    <a href="{% url 'deleteOrdonnance' ord.id %}" onclick="return confirm('confirmez la suppression?')"><button class="btn btn-danger" type="submit" ><i class="fa fa-trash"></i></button></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+    </div>
+    <!-- /.card -->
+{% endblock %}
