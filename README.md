@@ -16,7 +16,7 @@
 # Technologies utilisées
   * Python 
   * Framework Dajngo
-  * BD SqlLite
+  * BD SqLite
   
   NB: La base de donnée est directement intégré dans le projet vous n'aurez pas besoin d'une image << SqlLite >>
 
