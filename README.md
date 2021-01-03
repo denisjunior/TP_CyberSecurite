@@ -25,5 +25,6 @@
   * En suite mettez-vous à la racine du repertoire << projet >>
   * Taper la commande:
     << docker-compose up >>  pour démarrer le projet
+  * Lancer l'application dans votre navigateur avec l'adresse 127.0.0.1:8000
 # Documentation
   Dans le dossier documentation, vous trouverez le fichier mermaidjs et les objectifs de sécurité
