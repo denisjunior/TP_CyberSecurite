@@ -4,8 +4,21 @@ from .models import *
 from .forms import *
 from django.contrib import messages
 from django.db.models import ProtectedError
+from django.contrib.auth.decorators import login_required
+
 
 # Create your views here.
+
+def home(request):
+    all_medecin = Medecin.objects.all().count()
+    all_parent  = Parent.objects.all().count()
+    all_animal  = Animal.objects.all().count()
+    all_type    = TypeAnimal.objects.all().count()
+    return render(request, 'index.html', locals())
+
+
+
+@login_required()
 def medecin(request):
     all_medecin = Medecin.objects.all()
     if request.method == 'POST':
@@ -19,6 +32,7 @@ def medecin(request):
     ctx =   {"medecins":all_medecin}
     return render(request, 'medecin/createMe.html', ctx)
 
+@login_required()
 def medecin_update(request, pk):
     medecin = Medecin.objects.get(pk=pk)
     medecins= Medecin.objects.all()
@@ -32,6 +46,7 @@ def medecin_update(request, pk):
     ctx = {"medecins":medecins, "medecin":medecin}
     return render(request, 'medecin/updateMe.html', ctx)
 
+@login_required()
 def medecin_delete(request, pk):
     medecins = Medecin.objects.get(pk=pk)
     try:
@@ -43,6 +58,7 @@ def medecin_delete(request, pk):
     return redirect('create_medecin')
 
 ######## parent ############
+@login_required()
 def parent(request):
     all_parent  = Parent.objects.all()
     if request.method == 'POST':
@@ -56,6 +72,7 @@ def parent(request):
     ctx =   {"parents":all_parent}
     return render(request,'parent/createParent.html', ctx)
 
+@login_required()
 def parent_update(request, pk):
     parent = Parent.objects.get(pk=pk)
     parents = Parent.objects.all()
@@ -69,6 +86,7 @@ def parent_update(request, pk):
     ctx = {"parents": parents, "parent": parent}
     return render(request, 'parent/updateParent.html', ctx)
 
+@login_required()
 def parent_delete(request, pk):
     parents = Parent.objects.get(pk=pk)
     try:
@@ -80,7 +98,7 @@ def parent_delete(request, pk):
     return redirect('create_parent')
 
 ###### Type animal ########
-
+@login_required()
 def typeanimal(request):
     all_type    = TypeAnimal.objects.all()
     if request.method == 'POST':
@@ -93,7 +111,7 @@ def typeanimal(request):
             return render(request, 'typeanimal/createTypeanimal.html',{"form":form, "types":all_type})
     ctx =   {"types":all_type}
     return render(request, 'typeanimal/createTypeanimal.html',ctx)
-
+@login_required()
 def typeanimal_update(request,pk):
     type = TypeAnimal.objects.get(pk=pk)
     types = TypeAnimal.objects.all()
@@ -107,6 +125,7 @@ def typeanimal_update(request,pk):
     ctx = {"types": types, "type": type}
     return render(request, 'typeanimal/updateType.html', ctx)
 
+@login_required()
 def typeanimal_delete(request,pk):
     types = TypeAnimal.objects.get(pk=pk)
     try:
@@ -118,6 +137,7 @@ def typeanimal_delete(request,pk):
     return redirect('create_type')
 
 ###### Animal ######
+@login_required()
 def animal(request):
     all_animal  = Animal.objects.all()
     parent_animal= Parent.objects.all()
@@ -133,6 +153,7 @@ def animal(request):
     ctx =   {"animals":all_animal, "parents":parent_animal, "types":type_animal}
     return render(request, 'animal/create_animal.html',ctx)
 
+@login_required()
 def animal_update(request, pk):
     animal = Animal.objects.get(pk=pk)
     animals = Animal.objects.all()
@@ -148,6 +169,7 @@ def animal_update(request, pk):
     ctx = {"animals": animals, "animal": animal, "parents":parent_animal, "types":type_animal}
     return render(request, 'animal/updateAnimal.html', ctx)
 
+@login_required()
 def animal_delete(request, pk):
     animals = Animal.objects.get(pk=pk)
     try:
@@ -159,6 +181,7 @@ def animal_delete(request, pk):
     return redirect('create_animal')
 
 ##### Rendez-vous #########
+@login_required()
 def rendezvous(request):
     all_rendezvous = Rendezvous.objects.all()
     medecin_rdv = Medecin.objects.all()
@@ -174,7 +197,7 @@ def rendezvous(request):
             return render(request, 'rendezvous/create_rdv.html',{"form": form, "rendezvous": all_rendezvous, "medecins": medecin_rdv, "animals": animal_rdv})
     ctx = {"rendezvous":all_rendezvous, "medecins": medecin_rdv, "animals": animal_rdv }
     return render(request, 'rendezvous/create_rdv.html',ctx)
-
+@login_required()
 def rendezvous_update(request,pk):
     rdv = Rendezvous.objects.get(pk=pk)
     all_rendezvous = Rendezvous.objects.all()
@@ -189,7 +212,7 @@ def rendezvous_update(request,pk):
             return render(request, 'rendezvous/updateRdv.html',{"form": form, "rdv": rdv, "rendezvous": all_rendezvous, "medecins": medecin_rdv,"animals": animal_rdv})
     ctx = {"rdv":rdv, "rendezvous": all_rendezvous, "medecins": medecin_rdv,"animals": animal_rdv}
     return render(request, 'rendezvous/updateRdv.html', ctx)
-
+@login_required()
 def rendezvous_delete(request,pk):
     rdv = Rendezvous.objects.get(pk=pk)
     try:
@@ -200,7 +223,7 @@ def rendezvous_delete(request,pk):
         messages.success(request, 'Suppression effectuer avec succès')
     return redirect('create_rdv')
 
-
+@login_required()
 def medicament(request):
     all_medicament = Medicament.objects.all()
     if request.method == 'POST':
@@ -213,7 +236,7 @@ def medicament(request):
             return render(request, 'medicament/create_medicament.html', {"form": form, "medicaments": all_medicament})
     ctx = {"medicaments": all_medicament}
     return render(request, 'medicament/create_medicament.html',ctx)
-
+@login_required()
 def medicament_update(request,pk):
     medicament = Medicament.objects.get(pk=pk)
     medicaments = Medicament.objects.all()
@@ -226,7 +249,7 @@ def medicament_update(request,pk):
             return render(request, 'medicament/updateMedicament.html', {"form": form, "medicament": medicament, "medicaments": medicaments})
     ctx = {"medicaments": medicaments, "medicament": medicament}
     return render(request, 'medicament/updateMedicament.html', ctx)
-
+@login_required()
 def medicament_delete(request,pk):
     medicament = Medicament.objects.get(pk=pk)
     try:
@@ -237,7 +260,7 @@ def medicament_delete(request,pk):
         messages.success(request, 'Suppression effectuer avec succès')
     return redirect('create_medicament')
 
-
+@login_required()
 def ordonnance(request):
     all_ordonnance = Ordonnance.objects.all()
     rdv            = Rendezvous.objects.all()
@@ -252,7 +275,7 @@ def ordonnance(request):
             return render(request, 'ordonnance/create_ord.html',{"form": form, "ordonnance": all_ordonnance, "rendezvous": rdv})
     ctx = {"ordonnance": all_ordonnance, "rendezvous": rdv}
     return render(request, 'ordonnance/create_ord.html', ctx)
-
+@login_required()
 def ordonnance_delete(request,pk):
     ord = Ordonnance.objects.get(pk=pk)
     try:
@@ -262,7 +285,7 @@ def ordonnance_delete(request,pk):
     else:
         messages.success(request, 'Suppression effectuer avec succès')
     return redirect('create_ordonnance')
-
+@login_required()
 def prescription(request):
     all_prescrition = Prescription.objects.all()
     ordonnance_pres = Ordonnance.objects.all()
@@ -278,7 +301,7 @@ def prescription(request):
             return render(request, 'prescription/create_prescription.html',{"form": form, "ordonnances": ordonnance_pres, "medicaments": medicament_pres, "prescriptions":all_prescrition})
     ctx = {"ordonnances": ordonnance_pres, "medicaments": medicament_pres, "prescriptions":all_prescrition}
     return render(request, 'prescription/create_prescription.html',ctx)
-
+@login_required()
 def prescription_update(request,pk):
     presc = Prescription.objects.get(pk=pk)
     ordonnance_pres = Ordonnance.objects.all()
@@ -294,7 +317,7 @@ def prescription_update(request,pk):
             return render(request, 'prescription/updatePrescription.html',{"form": form, "ordonnances": ordonnance_pres, "medicaments": medicament_pres,"prescriptions": all_prescrition, "prescription":presc})
     ctx = {"ordonnances": ordonnance_pres, "medicaments": medicament_pres, "prescription":presc, "prescriptions": all_prescrition}
     return render(request, 'prescription/updatePrescription.html', ctx)
-
+@login_required()
 def prescription_delete(request,pk):
     prescriptions = Prescription.objects.get(pk=pk)
     try:
