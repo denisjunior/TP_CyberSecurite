@@ -1,5 +1,7 @@
 # TP_CyberSecurite
   projet de cyber sécurité
+  
+# Dans le dossier documentation, Description_fonctionalité.pdf vous trouverez les identifiants de connexion au lancement de l'application
 # Titre
   Clinique vétérinaire
 # Que fait le projet
